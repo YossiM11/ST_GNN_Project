@@ -1,6 +1,7 @@
 # Bridging Self-Supervised Clustering and Supervised Prediction in Spatial Transcriptomics
 
 **Yale University CPSC 4830 - Final Project - Spring 2026**
+
 **Author:** Yossi Moff (yossi.moff@yale.edu)
 
 ## Overview
@@ -11,7 +12,7 @@ This project extends GraphST (Long et al., Nature Communications 2023) with a no
 
 Original GraphST training loss, entirely self-supervised:
 
-L = λ1 * L_recon + λ2 * (L_SCL + L_SCL_corrupt)
+$$\mathcal{L} = \lambda_1 /mathcal{L}_{recon} + \lambda_2 (\mathcal{L}_{SCL} + \mathcal{L}_{SCL_{corrupt}})$$
 
 where λ1=10, λ2=1 (fixed), L_recon is reconstruction loss,
 and L_SCL is the spatial contrastive loss (including both real and corrupted graph.
