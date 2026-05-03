@@ -1,0 +1,14 @@
+torch>=2.0.0
+torch-geometric
+scanpy
+anndata
+matplotlib
+seaborn
+scikit-learn
+umap-learn
+scikit-misc
+POT
+pandas
+numpy
+tqdm
+ipykernel
