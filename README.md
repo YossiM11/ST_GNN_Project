@@ -12,18 +12,17 @@ This project extends GraphST (Long et al., Nature Communications 2023) with a no
 
 Original GraphST training loss, entirely self-supervised:
 
-$$\mathcal{L} = \lambda_1 /mathcal{L}_{recon} + \lambda_2 (\mathcal{L}_{SCL} + \mathcal{L}_{SCL_{corrupt}})$$
+$$\mathcal{L} = \lambda_1 \mathcal{L}_{recon} + \lambda_2 (\mathcal{L}_{SCL} + \mathcal{L}_{SCL_{corrupt}})$$
 
-where λ1=10, λ2=1 (fixed), L_recon is reconstruction loss,
-and L_SCL is the spatial contrastive loss (including both real and corrupted graph.
+where $\lambda_1=10$, $\lambda_2=1$ (fixed, based on values from paper), $L_{recon}$ is reconstruction loss, and $L_{SCL}$ is the spatial contrastive loss (including both real and corrupted graph).
 
 **My semi-supervised extension:**
 
-L = λ1 * L_recon + λ2 * (L_SCL + L_SCL_corrupt) + γ * L_cls
+$$L = \lambda_1 \mathcal{L}_{recon} + \lambda_2 (\mathcal{L}_{SCL} + \mathcal{L}_{SCL_{corrupt}}) + \gamma \mathcal{L}_{cls}$$
 
-where L_cls is cross-entropy classification loss on labeled spots, and γ ∈ {0, 0.1, 0.5, 1.0, 5.0} controls the supervision strength.
-γ=0 reduces the loss function to the original GraphST loss function (purely unsupervised).
-γ>0 introduces semi-supervised learning, with the classification loss exerting more influence on the overall loss function output as γ increases.
+where $L_{cls}$ is cross-entropy classification loss on labeled spots, and $\gamma \in \{0, 0.1, 0.5, 1.0, 5.0\}$ controls the supervision strength.
+$\gamma=0$ reduces the loss function to the original GraphST loss function (purely unsupervised).
+$\gamma>0$ introduces semi-supervised learning, with the classification loss exerting more influence on the overall loss function output as $\gamma$ increases.
 
 ## Results
 
