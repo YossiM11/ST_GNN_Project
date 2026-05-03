@@ -64,7 +64,7 @@ pip install -r requirements.txt
 python -m ipykernel install --user --name=GraphST --display-name "GraphST"
 ```
 
-4. Download the DLPFC data from [Final Project Data - DLPFC](https://drive.google.com/drive/folders/1Fkp1ImRlb44YEfAAN0Cum9B08l-pHfNg?usp=sharing), rename it to `Data`, and place it inside the `GraphST/` folder so the path is `GraphST/Data/`.
+4. Download the DLPFC data from [Final Project Data - DLPFC](https://drive.google.com/drive/folders/1Fkp1ImRlb44YEfAAN0Cum9B08l-pHfNg?usp=sharing) (which combines spatialLIBD DLPFC files and STAGATE DLPFC annotations), rename it to `Data`, and place it inside the `GraphST/` folder so the path is `GraphST/Data/`.
 
 5. Open `project_notebook.ipynb` in Jupyter.
 
