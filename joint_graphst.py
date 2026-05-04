@@ -10,25 +10,9 @@ objective, enabling cortical layer prediction from spatial gene expression data.
 Original GraphST loss (Long et al., 2023):
     L = λ1 * L_recon + λ2 * (L_SCL + L_SCL_corrupt)
 
-Our novel semi-supervised extension:
+My novel semi-supervised extension:
     L = λ1 * L_recon + λ2 * (L_SCL + L_SCL_corrupt) + γ * L_cls
-
-Where:
-    L_recon       = MSE reconstruction loss (unsupervised)
-    L_SCL         = spatial contrastive loss on real graph (unsupervised)
-    L_SCL_corrupt = spatial contrastive loss on corrupted graph (unsupervised)
-    L_cls         = cross-entropy classification loss on labeled spots (supervised)
-    γ             = supervision weight (our novel hyperparameter)
-                    γ=0: reduces to original GraphST
-                    γ>0: semi-supervised extension (our contribution)
-
-References:
-    Long et al. (2023). GraphST. Nature Communications.
-    Kipf & Welling (2017). Semi-supervised GCN. ICLR.
-    You et al. (2020). Graph contrastive learning. NeurIPS.
-    Rong et al. (2020). Self-supervised graph transformer. NeurIPS.
-
-Author: Yossi Moff, Yale University CPSC 4830
+    
 """
 
 import torch
@@ -54,12 +38,12 @@ class MLPClassifier(nn.Module):
     """
     Two-layer MLP classification head applied to GraphST embeddings.
     
-    Used in Stage 2 of our architecture to predict cortical layer identity
+    Used in Stage 2 of my architecture to predict cortical layer identity
     from the 64-dimensional spatial embeddings produced by the GraphST encoder.
     
     Includes BatchNorm and Dropout for regularization, and supports
     class-weighted cross-entropy to handle cortical layer imbalance
-    (e.g. L3 has 3x more spots than L2 in the DLPFC dataset).
+    (e.g. L3 has ~4x more spots than L2 in the DLPFC dataset).
     """
     def __init__(self, input_dim, hidden_dim, num_classes, dropout=0.3):
         super().__init__()
@@ -124,14 +108,14 @@ class JointGraphST(nn.Module):
     """
     Novel semi-supervised extension of GraphST.
     
-    Combined loss (our contribution):
+    Combined loss (my contribution):
         L = alpha * recon_loss + beta * contrastive_loss + gamma * classification_loss
     
     When gamma=0: reduces to original GraphST (purely unsupervised)
     When gamma>0: supervision signal guides spatial embeddings toward
                   cortical layer discriminability
-                  
-    Reference: Kipf & Welling (ICLR 2017) semi-supervised GCN framework
+
+    Use hidden dimensions of 256 and 128, dropout = 0.3
     """
     def __init__(self, dim_input, dim_output, graph_neigh, num_classes, 
                  hidden_dim=256, dropout=0.3):
@@ -163,8 +147,6 @@ def run_joint_graphst(adata_input, labels, train_mask, test_mask,
                        epochs=600, alpha=10, beta=1, random_seed=41):
     """
     Train joint GraphST with given gamma and return test metrics.
-    gamma=0 → pure unsupervised (original GraphST)
-    gamma>0 → semi-supervised (our contribution)
     """
     fix_seed(random_seed)
     
@@ -219,12 +201,11 @@ def run_joint_graphst(adata_input, labels, train_mask, test_mask,
         loss_sl_2 = loss_CSL(ret_a, label_CSL)
         loss_feat = F.mse_loss(features, emb)
 
-        # Novel classification loss (only on labeled spots)
+        # (New) classification loss, only on labeled spots according to train_mask split
         loss_cls = loss_CE(logits[train_mask_tensor], 
                            labels_tensor[train_mask_tensor])
 
-        # Combined loss — key novel contribution
-        # gamma=0 → original GraphST, gamma>0 → semi-supervised
+        # Combined loss
         loss = alpha * loss_feat + beta * (loss_sl_1 + loss_sl_2) + gamma * loss_cls
 
         optimizer.zero_grad()
@@ -272,26 +253,6 @@ def evaluate_model(model, X_test, y_test, n_classes, device, model_name="Model")
     for this project due to cortical layer class imbalance.
     Macro-F1 weights all classes equally regardless of size.
     AUROC captures minority-class performance.
-    
-    Parameters
-    ----------
-    model : JointGraphST or MLPClassifier
-        Trained model
-    X_test : array
-        Test embeddings
-    y_test : array
-        True labels
-    n_classes : int
-        Number of classes
-    device : torch.device
-        CPU or CUDA
-    model_name : str
-        Name for printing
-        
-    Returns
-    -------
-    macro_f1 : float
-    auroc : float
     """
     model.eval()
     X_t = torch.FloatTensor(X_test).to(device)
