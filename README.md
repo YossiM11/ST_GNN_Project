@@ -72,9 +72,10 @@ python -m ipykernel install --user --name=GraphST --display-name "GraphST"
 
 ## References
 
-1. Long et al. (2023). GraphST. Nature Communications.
-2. Dong & Zhang (2022). STAGATE. Nature Communications.
-3. Liu et al. (2024). Benchmarking GNNs for ST. CSBJ.
-4. Kipf & Welling (2017). Semi-supervised GCN. ICLR.
-5. You et al. (2020). Graph contrastive learning. NeurIPS.
-6. Rong et al. (2020). Self-supervised graph transformer. NeurIPS.
+1. Maynard et al. (2021). DLPFC spatial transcriptomics. Nature Neuroscience.
+2. Kipf & Welling (2017). Semi-supervised GCN. ICLR.
+3. Dong & Zhang (2022). STAGATE. Nature Communications.
+4. Long et al. (2023). GraphST. Nature Communications.
+5. Liu et al. (2024). Benchmarking GNNs for ST. CSBJ.
+6. Ritter et al. (2025). SRT & GDL for CNS tumor diagnostics. Nature Cancer.
+7. Zeira et al. (2022). Alignment & integration of ST data. Nature Methods.
